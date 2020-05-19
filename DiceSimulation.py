@@ -46,10 +46,14 @@ class Dice(object):
                 n += 1
         return n
 
-def line(x, a, b, c):
+def dline(x, a, b, c):
     return a*np.exp(-b*x) + c
-    
 
+def line(x,a,b,c):
+    y = np.empty(x.size)
+    for i in range(0,x.size):
+        y[i] = a*math.exp(-b*x[i]) + c
+    return y
 
 def main():
     sides = t.getInt("Number of sides on each dice",6)
@@ -76,7 +80,7 @@ def main():
     #            Do data fitting
     x = np.array(xData)     # convert x/y data to np arrays.
     y = np.array(yData)
-    sig = np.sqrt(y)/y
+    sig = np.sqrt(y)
     #                Define a 3 parameter line
     #line = lambda x,a,b,c : a*np.exp(-b*x) + c
     #                Do a fit
@@ -89,7 +93,7 @@ def main():
     plt.title("Decay plot for {0:d} dice with {1:d} sides".format(startsample,sides))
     #                Plot the fitted line with 200 points
     xfine = np.linspace(0.0,float(run),200)
-    plt.plot(xfine,line(xfine,popt[0],popt[1],popt[2]),"r",label="Decay parameter {0:8.4f}".format(popt[1]))
+    plt.plot(xfine,dline(xfine,popt[0],popt[1],popt[2]),"r",label="Decay parameter {0:8.4f}".format(popt[1]))
     plt.xlabel("Generation")
     plt.ylabel("Dice Number")
     plt.legend(loc="upper right",fontsize="small")
